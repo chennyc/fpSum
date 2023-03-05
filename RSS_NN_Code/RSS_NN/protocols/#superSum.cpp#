@@ -1,0 +1,43 @@
+#include "../include/Rss_Op.h"
+void Rss_superSum(Lint **res, Lint ***superA, int w, uint batch_size, int alpha, uint ring_size, int *map, NodeNetwork* nodeNet) {
+    uint i, j, k;    
+    
+    //sum all superaccumulator
+    for(k = 0; k < 2; ++k){
+      for(i = 0; i < batch_size; ++i) {
+	for(j = 0; j < alpha; ++j) {
+	  res[k][j] += superA[k][i][j];
+	}
+      }
+    }
+
+    //truc
+    Lint **truncRes = new Lint*[2];
+    Lint **r = new Lint*[2];
+    for(i = 0; i < 2; ++i) {
+        truncRes[i] = new Lint [alpha];
+	r[i] = new Lint [alpha];
+    }
+    
+    Rss_truncPre(truncRes, res, w, aalpha, ring_size, map, nodeNet);
+
+    for(i = 0; i < 2; ++i) {
+      for(j = 0; j < alpha; ++j) {
+	r[i][j] = res[i][j] - (truncRes[i][j] << w);
+      }
+    }
+
+    for(i = 0; i < 2; ++i) {
+      for(j = 1; j < alpha; ++j) {
+	res[i][j] = r[i][j] + truncRes[i][j-1];
+      }
+    }
+
+    for(i = 0; i < 2; i++) {
+      delete [] truncRes[i];
+      delete [] r[i];
+    }
+    delete [] r;
+    delete [] truncRes;
+
+}

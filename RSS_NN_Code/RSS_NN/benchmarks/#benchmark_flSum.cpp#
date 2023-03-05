@@ -1,0 +1,38 @@
+
+void BS(NodeNetwork* nodeNet, NodeConfiguration* nodeConfig, uint size, uint batch_size) {
+  int bits;
+  int i, j, k;
+  int pid = nodeConfig->getID();
+  int flag = 0;
+  int total;
+  int ring_size = nodeNet->RING;
+
+  int bytes = (ring_size+8-1)/8;
+
+  printf("hello, I am %d\n", pid);
+  int map[2];
+        Lint one[2]; //one: 0, 0, 1                                                                   
+        switch(pid){
+                case 1:
+                        map[0] = 3;
+                        map[1] = 2;
+
+                        one[0] = 0;
+                        one[1] = 0;
+                        break;
+                case 2:
+                        map[0] = 1;
+                        map[1] = 3;
+
+                        one[0] = 0;
+                        one[1] = 1;
+                        break;
+                case 3:
+                        map[0] = 2;
+                        map[1] = 1;
+
+                        one[0] = 1;
+                        one[1] = 0;
+                        break;
+        }
+}
